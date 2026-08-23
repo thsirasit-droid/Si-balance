@@ -220,9 +220,11 @@
 
   <!-- JavaScript Logic -->
   <script>
-    // 1. ตั้งค่า Supabase Credentials
+    <!-- JavaScript Logic -->
+  <script>
+    // 1. ตั้งค่า Supabase Credentials (ใช้ Project ID และ Key ที่ถูกต้องแล้ว)
     const SUPABASE_URL = 'https://hwfrovzqytwhjsxozfgi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZnJvdnpxeXR3aGpzeG96ZmdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0Nzg4NDMsImV4cCI6MjEwMzA1NDg0M30.jT8Sa5i12UnUr1mC6Ze8JmjrVN3mi6WXP9VcRvaDzck';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZnJvdnpxeXR3aGpzeG96ZmdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0MTA1ODksImV4cCI6MjA1NTk4NjU4OX0.jEUSYyUqRk-xQ522iV4pW6m9N49Qf90_9U2M2011111'; // สลับใส่ API Key แบบ Legacy / Publishable Key จากหน้า Supabase ของคุณ
     
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -268,7 +270,7 @@
 
       if (error) {
         console.error('Error fetching assets:', error);
-        assetListEl.innerHTML = 'เกิดข้อผิดพลาดในการดึงข้อมูล';
+        assetListEl.innerHTML = 'เกิดข้อผิดพลาดในการดึงข้อมูล: ' + error.message;
         return;
       }
 
@@ -294,7 +296,7 @@
         if (item.category) categories.add(item.category);
 
         const row = document.createElement('div');
-        row.className = 'py-3 flex justify-between items-center text-left';
+        row.className = 'py-3 flex justify-between items-center text-left border-b border-gray-50 last:border-none';
         row.innerHTML = `
           <div>
             <p class="font-semibold text-gray-800">${item.name}</p>
