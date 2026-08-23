@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money Buddy - เว็บจัดการเงินส่วนบุคคล</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r border-gray-200 flex flex-col justify-between p-4 hidden md:flex">
+    <div>
+      <!-- Logo -->
+      <div class="flex items-center gap-3 mb-8 px-2">
+        <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center font-bold text-lg">
+          Money
+        </div>
+        <div>
+          <h1 class="font-bold text-gray-900 leading-tight">Money Buddy</h1>
+          <p class="text-xs text-gray-400">เปลี่ยนเงินเป็นเรื่องวางแผน</p>
+        </div>
+      </div>
+
+      <!-- Nav Section 1 -->
+      <div class="mb-6">
+        <p class="text-xs font-semibold text-gray-400 mb-2 px-2">เมนูหลัก</p>
+        <nav class="space-y-1">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium bg-amber-100/60 text-amber-700">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> แดชบอร์ด
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+            <i data-lucide="pie-chart" class="w-4 h-4"></i> ทรัพย์สินการลงทุน
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+            <i data-lucide="arrow-left-right" class="w-4 h-4"></i> รายรับ-รายจ่าย
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+            <i data-lucide="target" class="w-4 h-4"></i> แผนลงทุน
+          </a>
+        </nav>
+      </div>
+
+      <!-- Nav Section 2 -->
+      <div class="mb-6">
+        <p class="text-xs font-semibold text-gray-400 mb-2 px-2">เครื่องมือ</p>
+        <nav class="space-y-1">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+            <i data-lucide="scale" class="w-4 h-4"></i> ปรับสมดุลพอร์ต
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+            <i data-lucide="user" class="w-4 h-4"></i> วางแผนเกษียณ
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+            <i data-lucide="calculator" class="w-4 h-4"></i> คำนวณภาษี
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Social Links Footer -->
+    <div>
+      <p class="text-xs font-semibold text-gray-400 mb-2 px-2">ติดตามเรา</p>
+      <div class="flex gap-2 text-gray-400 px-2">
+        <span class="w-6 h-6 rounded bg-gray-100 flex items-center justify-center text-xs cursor-pointer hover:bg-gray-200">🌐</span>
+        <span class="w-6 h-6 rounded bg-gray-100 flex items-center justify-center text-xs cursor-pointer hover:bg-gray-200">🎵</span>
+        <span class="w-6 h-6 rounded bg-gray-100 flex items-center justify-center text-xs cursor-pointer hover:bg-gray-200">📷</span>
+        <span class="w-6 h-6 rounded bg-gray-100 flex items-center justify-center text-xs cursor-pointer hover:bg-gray-200">f</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+    <!-- Top Portfolio Card -->
+    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm mb-6">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex items-center gap-2 text-gray-600 font-medium text-sm md:text-base">
+          <span>มูลค่าพอร์ตทั้งหมด</span>
+          <i data-lucide="eye" class="w-4 h-4 text-gray-400 cursor-pointer"></i>
+          <i data-lucide="settings" class="w-4 h-4 text-gray-400 cursor-pointer"></i>
+        </div>
+        <span id="last-update" class="text-xs text-gray-400">อัปเดตล่าสุด: -</span>
+      </div>
+
+      <div id="total-value" class="text-3xl font-bold text-gray-900 mb-4">
+        ฿0.00
+      </div>
+
+      <div class="flex gap-8 text-sm">
+        <div>
+          <p class="text-gray-400 text-xs">กำไร/ขาดทุน</p>
+          <p id="profit-loss" class="font-semibold text-gray-700">฿0.00 (0.00%)</p>
+        </div>
+        <div>
+          <p class="text-gray-400 text-xs">ต้นทุนรวม</p>
+          <p id="total-cost" class="font-semibold text-gray-700">฿0.00</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINE Connect Banner -->
+    <div class="bg-emerald-500 text-white rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+          <i data-lucide="message-circle" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <p class="font-semibold text-sm">เชื่อมต่อ LINE เพื่อบันทึกรายรับ-รายจ่ายผ่านแชท</p>
+          <p class="text-xs text-emerald-100">การแจ้งเตือนและสรุปรายรับ-รายจ่ายอัตโนมัติ</p>
+        </div>
+      </div>
+      <button class="bg-white text-emerald-600 font-semibold text-xs px-4 py-2 rounded-full hover:bg-emerald-50 transition whitespace-nowrap">
+        เชื่อมต่อ LINE เลย
+      </button>
+    </div>
+
+    <!-- Stat Cards Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
+          <i data-lucide="folder-kanban" class="w-4 h-4 text-indigo-500"></i>
+        </div>
+        <p class="text-xs text-gray-400 mb-1">ประเภทสินทรัพย์</p>
+        <p id="stat-categories" class="font-bold text-gray-800 text-base">0 ประเภท</p>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center mb-3">
+          <i data-lucide="activity" class="w-4 h-4 text-purple-500"></i>
+        </div>
+        <p class="text-xs text-gray-400 mb-1">จำนวนการถือครอง</p>
+        <p id="stat-count" class="font-bold text-gray-800 text-base">0 รายการ</p>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center mb-3">
+          <i data-lucide="award" class="w-4 h-4 text-emerald-500"></i>
+        </div>
+        <p class="text-xs text-gray-400 mb-1">สินทรัพย์ที่ดีที่สุด</p>
+        <p class="font-bold text-gray-800 text-base">-</p>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+          <i data-lucide="pie-chart" class="w-4 h-4 text-blue-500"></i>
+        </div>
+        <p class="text-xs text-gray-400 mb-1">สัดส่วนมากที่สุด</p>
+        <p class="font-bold text-gray-800 text-base">-</p>
+      </div>
+    </div>
+
+    <!-- Asset List Container -->
+    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+      <h3 class="font-semibold text-gray-700 mb-4">รายการสินทรัพย์</h3>
+      <div id="asset-list" class="divide-y divide-gray-100 text-sm text-gray-400 py-4 text-center">
+        กำลังโหลดข้อมูล...
+      </div>
+    </div>
+  </main>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // 1. ตั้งค่า Supabase Credentials
+    const SUPABASE_URL = 'https://iudacizbeayvmjfjiriu.supabase.co;
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1ZGFjaXpiZWF5dm1qZmppcml1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0NzU0NjksImV4cCI6MjEwMzA1MTQ2OX0.JfWrl-kbZia3u_wwgf9i4iLhnIz1X4XPKZF0mdXivm8';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // 2. ดึงข้อมูลและสร้าง UI
+    async function fetchDashboardData() {
+      const { data: assets, error } = await supabase.from('assets').select('*');
+
+      const assetListEl = document.getElementById('asset-list');
+
+      if (error) {
+        console.error('Error fetching assets:', error);
+        assetListEl.innerHTML = 'เกิดข้อผิดพลาดในการดึงข้อมูล';
+        return;
+      }
+
+      // แสดงวัน/เวลาปัจจุบัน
+      document.getElementById('last-update').innerText = `อัปเดตล่าสุด: ${new Date().toLocaleDateString('th-TH')}`;
+
+      if (!assets || assets.length === 0) {
+        assetListEl.innerHTML = '<div class="py-8">ยังไม่มีข้อมูลการลงทุน</div>';
+        return;
+      }
+
+      // คำนวณยอดรวม
+      let totalCost = 0;
+      let totalCurrentValue = 0;
+      const categories = new Set();
+
+      assetListEl.innerHTML = '';
+
+      assets.forEach(item => {
+        const cost = Number(item.cost_basis) || 0;
+        const currentVal = (Number(item.amount) || 0) * (Number(item.current_price) || 0);
+
+        totalCost += cost;
+        totalCurrentValue += currentVal;
+        if (item.category) categories.add(item.category);
+
+        // แสดงรายการ
+        const row = document.createElement('div');
+        row.className = 'py-3 flex justify-between items-center text-left';
+        row.innerHTML = `
+          <div>
+            <p class="font-semibold text-gray-800">${item.name}</p>
+            <p class="text-xs text-gray-400">${item.category}</p>
+          </div>
+          <div class="text-right">
+            <p class="font-semibold text-gray-900">฿${currentVal.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</p>
+            <p class="text-xs text-gray-400">${item.amount} หน่วย</p>
+          </div>
+        `;
+        assetListEl.appendChild(row);
+      });
+
+      const profitLoss = totalCurrentValue - totalCost;
+      const profitPercent = totalCost > 0 ? (profitLoss / totalCost) * 100 : 0;
+
+      // อัปเดต UI ตัวเลข
+      document.getElementById('total-value').innerText = `฿${totalCurrentValue.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
+      document.getElementById('total-cost').innerText = `฿${totalCost.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
+      
+      const profitEl = document.getElementById('profit-loss');
+      profitEl.innerText = `฿${profitLoss.toLocaleString('th-TH', { minimumFractionDigits: 2 })} (${profitPercent.toFixed(2)}%)`;
+      profitEl.className = `font-semibold ${profitLoss >= 0 ? 'text-emerald-500' : 'text-red-500'}`;
+
+      document.getElementById('stat-categories').innerText = `${categories.size} ประเภท`;
+      document.getElementById('stat-count').innerText = `${assets.length} รายการ`;
+    }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      fetchDashboardData();
+    });
+  </script>
+</body>
+</html>
