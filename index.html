@@ -220,15 +220,11 @@
 
   <!-- JavaScript Logic -->
   <script>
-    <!-- JavaScript Logic -->
-  <script>
-    // 1. ตั้งค่า Supabase Credentials (ใช้ Project ID และ Key ที่ถูกต้องแล้ว)
     const SUPABASE_URL = 'https://hwfrovzqytwhjsxozfgi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZnJvdnpxeXR3aGpzeG96ZmdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0Nzg4NDMsImV4cCI6MjEwMzA1NDg0M30.jT8Sa5i12UnUr1mC6Ze8JmjrVN3mi6WXP9VcRvaDzck'; // สลับใส่ API Key แบบ Legacy / Publishable Key จากหน้า Supabase ของคุณ
-    
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZnJvdnpxeXR3aGpzeG96ZmdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0Nzg4NDMsImV4cCI6MjEwMzA1NDg0M30.jT8Sa5i12UnUr1mC6Ze8JmjrVN3mi6WXP9VcRvaDzck';
+
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Modal Control
     function openModal() {
       document.getElementById('asset-modal').classList.remove('hidden');
       document.getElementById('asset-modal').classList.add('flex');
@@ -240,7 +236,6 @@
       document.getElementById('add-asset-form').reset();
     }
 
-    // Handle Form Submit
     async function handleFormSubmit(e) {
       e.preventDefault();
       
@@ -262,7 +257,6 @@
       }
     }
 
-    // 2. ดึงข้อมูลและสร้าง UI
     async function fetchDashboardData() {
       const { data: assets, error } = await supabase.from('assets').select('*');
 
@@ -324,7 +318,6 @@
       document.getElementById('stat-count').innerText = `${assets.length} รายการ`;
     }
 
-    // Initialize Page
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       fetchDashboardData();
@@ -332,3 +325,4 @@
   </script>
 </body>
 </html>
+
